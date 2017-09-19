@@ -15,20 +15,20 @@ module.exports.setup = (passport) => {
     });
 
     passport.use('local-auth', new LocalStrategy({
-        usernameField: 'username',
+        emailField: 'email',
         passwordField: 'password',
-    }, function (username, password, next) {
-        User.findOne({ username: username }, (err, user) => {
+    }, function (email, password, next) {
+        User.findOne({ email: email }, (err, user) => {
             if (err) { return next(err);
             } else if (!user) {
-                return next(err, false, { message: 'Invalid username or password' });
+                return next(err, false, { message: 'Invalid email or password' });
             } else {
                 user.checkPassword(password, (err, isMatch) => {
                     if (err) { return next(err); }
                     else if (isMatch) {
                         return next(null, user);
                     } else {
-                        return next(err, false, { message: 'Invalid username or password' })
+                        return next(err, false, { message: 'Invalid email or password' })
                     }
                 });
             }
