@@ -4,43 +4,58 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
-const index = require('./routes/index');
-const users = require('./routes/users');
+require('./configs/db.config');
+require('./configs/passport.config').setup(passport);
+const corsOptions = require('./configs/cors.config');
+
+const authRoutes = require('./routes/auth.route');
+const userRoutes = require('./routes/user.route');
+const tripRoutes = require('./routes/trip.route');
 
 const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.use(cors(corsOptions));
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use(session({
+  secret: 'SuperSecret',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { httpOnly: true, maxAge: 2419200000 }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  let err = new Error('Not Found');
+const apiPrefix = '/api'
+app.use(`${apiPrefix}`, authRoutes);
+app.use(`${apiPrefix}/user`, userRoutes);
+app.use(`${apiPrefix}/trips`, tripRoutes);
+
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  if (err instanceof mongoose.Error.ValidationError) {
+    err.status = 400;
+  }
   res.status(err.status || 500);
-  res.render('error');
+  res.json({ message: err.message });
 });
 
 module.exports = app;

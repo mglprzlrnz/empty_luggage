@@ -3,6 +3,7 @@ const dbName = 'ex-empty_luggage';
 const dbUri = `mongodb://localhost/${dbName}`;
 
 mongoose.connect(dbUri, { useMongoClient: true });
+mongoose.Promise = Promise;
 
 const db = mongoose.connection;
 
