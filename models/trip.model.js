@@ -8,12 +8,28 @@ const tripSchema = new mongoose.Schema({
         required: 'Trip needs an owner'
     },
     from: {
-        type: String,
-        required: 'This field is required'
+        city: {
+            type: String,
+            required: 'The departure City is required'
+        },
+        country: {
+            type: String,
+            required: 'The departure Country is required'
+        },
+        lat: Number,
+        lng: Number
     },
     to: {
-        type: String,
-        required: 'The destination is required'
+        city: {
+            type: String,
+            required: 'The destitaion City is required'
+        },
+        country: {
+            type: String,
+            required: 'The destiantion Country is required'
+        },
+        lat: Number,
+        lng: Number
     },
     departureDateTime: {
         type: Date,

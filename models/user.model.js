@@ -19,8 +19,7 @@ const userSchema = new mongoose.Schema({
     surname: {
         type: String,
         required: 'The surname is required'
-    },
-    trips: [String]
+    }
 }, {timestamps: true});
 
 userSchema.pre('save', function save(next) {
