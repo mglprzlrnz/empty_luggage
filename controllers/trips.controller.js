@@ -39,6 +39,11 @@ module.exports.getRecents = (req, res, next) => {
         .catch(err => next(err));
 }
 
-
+module.exports.getTrip = (req, res, next) => {
+    Trip.findById(req.params.id)
+        .populate('owner')
+    .then(trip => res.status(200).json(trip))
+    .catch(err => next(err));
+}
 
 

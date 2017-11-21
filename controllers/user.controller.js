@@ -18,7 +18,6 @@ module.exports.register = (req, res, next) => {
     });
 
     if (!user.email || !user.password || !user.name || !user.surname) {
-        console.log(user)
         return res.status(400).json({ message: 'All the fields are required' });
     } else {
         User.findOne({email: user.email}, (err, exist) => {
@@ -109,6 +108,7 @@ module.exports.editTrip = (req, res, next) => {
             if (!trip) {
                 res.status(404).json();
             } else {
+                trip.bag.restrictions = req.body.bag.restrictions;
                 _.merge(trip, req.body);
                 trip.save()
                     .then(trip => res.status(200).json(trip))

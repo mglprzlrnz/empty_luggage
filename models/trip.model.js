@@ -47,16 +47,14 @@ const tripSchema = new mongoose.Schema({
             type: Number,
             required: 'Available weight is required'
         },
-        dimensions: {
-            high: {
-                type: Number,
-                required: 'Dimensions availability is required'
-            },
-            width: {
-                type: Number,
-                required: 'Dimensions availability is required'
-            }   
-        }  
+        high: {
+            type: Number,
+            required: 'Dimensions availability is required'
+        },
+        width: {
+            type: Number,
+            required: 'Dimensions availability is required'
+        }    
 
     }
 
